@@ -11,10 +11,9 @@
 
 (defn response-for
   [s]
-  (let [stripped (str/trim s)
-        last-chr (nth stripped (dec (count stripped)) nil)]
+  (let [stripped (str/trim s)]
     (cond
       (all-caps stripped) "Whoa, chill out!"
-      (= \? last-chr) "Sure."
-      (= "" stripped) "Fine. Be that way!"
+      (str/ends-with? stripped "?") "Sure."
+      (empty? stripped) "Fine. Be that way!"
       :else "Whatever.")))
