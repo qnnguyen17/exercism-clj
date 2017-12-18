@@ -15,18 +15,14 @@
   (transduce encode-transducer str s))
 
 (defn decode-form
-  [[num-str letter-str]]
-  (if (empty? num-str)
-    letter-str
-    (apply str (repeat
-                (Integer/parseInt num-str)
-                letter-str))))
+  [[_ num-str letter-str]]
+  (repeat
+   ((fnil #(Integer/parseInt %) "1") num-str)
+   letter-str))
 
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [s]
-  (->> s
-       (re-seq #"(\d*)([A-Za-z]|\s)")
-       (map rest)
-       (map decode-form)
+  (->> (re-seq #"(\d+)?([A-Za-z]|\s)" s)
+       (mapcat decode-form)
        (apply str)))
